@@ -3,7 +3,7 @@ const { checkUsernameExists, validateRoleName } = require('./auth-middleware');
 const { JWT_SECRET } = require("../secrets"); // use this secret!
 const jwt = require('jsonwebtoken');
 
-router.post("/register", validateRoleName, async(req, res, next) => {
+router.post("/register", validateRoleName,async (req, res, next) => {
   /**
     [POST] /api/auth/register { "username": "anna", "password": "1234", "role_name": "angel" }
 
@@ -31,7 +31,7 @@ router.post("/register", validateRoleName, async(req, res, next) => {
 });
 
 
-router.post("/login", checkUsernameExists, (req, res, next) => {
+router.post("/login", checkUsernameExists,async(req, res, next) => {
   /**
     [POST] /api/auth/login { "username": "sue", "password": "1234" }
 
@@ -55,7 +55,7 @@ router.post("/login", checkUsernameExists, (req, res, next) => {
 
     try {
   
-      const [user] =  Users.findBy({ username: username });
+      const [user] = await Users.findBy({ username: username });
       if (user && bcryptjs.compareSync(password, user.password)) {
         const token = generateToken(user);
         res.status(200).json({ message: 'welcome to the api', token: token });
